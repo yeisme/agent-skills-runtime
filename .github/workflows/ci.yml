@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+      - run: go mod download
+      - run: go mod verify
+      - run: go mod tidy && git diff --exit-code go.mod go.sum
+      - run: go test ./...
+      - run: go test -race ./...
+      - run: CGO_ENABLED=0 go build ./...
+      - uses: golangci/golangci-lint-action@v8
+        with:
+          version: v2.4.0
+      - uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: v2.12.7
+          args: check
+
