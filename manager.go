@@ -212,6 +212,7 @@ func (m *Manager) evaluatePlan(registry Registry, operation PlanOperation, desir
 
 // Apply rechecks the reviewed plan under the shared lock and commits one transaction.
 func (m *Manager) Apply(ctx context.Context, plan InstallPlan, options ApplyOptions) (ApplyResult, error) {
+	plan = normalizeInstallPlan(plan)
 	if !options.Confirm {
 		return ApplyResult{}, newError(CodeConfirmationRequired, "plan application requires explicit confirmation", plan.PlanID, nil)
 	}
@@ -352,7 +353,17 @@ func ReadPlan(path string) (InstallPlan, error) {
 	if plan.SchemaVersion != InstallPlanSchema {
 		return InstallPlan{}, newError(CodeSchemaUnsupported, "unsupported install plan schema", path, nil)
 	}
-	return plan, nil
+	return normalizeInstallPlan(plan), nil
+}
+
+func normalizeInstallPlan(plan InstallPlan) InstallPlan {
+	if plan.Actions == nil {
+		plan.Actions = []PlanAction{}
+	}
+	if plan.Conflicts == nil {
+		plan.Conflicts = []Conflict{}
+	}
+	return plan
 }
 
 func validateSnapshot(runtimeRoots []string, snapshot ProductSnapshot) error {

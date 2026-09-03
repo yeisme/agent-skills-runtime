@@ -40,6 +40,11 @@
 - 2026-09-03: `golangci-lint run` reported `0 issues`.
 - 2026-09-03: `goreleaser check` passed.
 - 2026-09-03: strict OpenSpec validation passed.
+- 2026-09-03 review follow-up: serialized plans now normalize omitted empty
+  action/conflict arrays before stale-plan comparison;
+  `TestSerializedPlanWithoutConflictsCanBeApplied` passed.
+- 2026-09-03 review follow-up: the complete local gate set above passed again
+  after the serialization fix.
 
 任务串行，因为 schema、registry mutation 和 exported API 是共享写入边界；消费者可在
 公共 module tag 后独立并行。

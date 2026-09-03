@@ -189,6 +189,30 @@ func TestStalePlanIsRejected(t *testing.T) {
 	}
 }
 
+func TestSerializedPlanWithoutConflictsCanBeApplied(t *testing.T) {
+	home := t.TempDir()
+	target := RuntimeTarget{Runtime: RuntimeAgents, SkillsDir: filepath.Join(home, ".agents", "skills")}
+	manager := testManager(t, home, "scaena")
+	plan, err := manager.PlanInstall(testBundle(t, t.TempDir(), "scaena", "v1", map[string]string{"scaena-skill": "scaena"}), []RuntimeTarget{target})
+	if err != nil {
+		t.Fatal(err)
+	}
+	planPath := filepath.Join(t.TempDir(), "install-plan.json")
+	if err := WritePlan(planPath, plan); err != nil {
+		t.Fatal(err)
+	}
+	readPlan, err := ReadPlan(planPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if readPlan.Conflicts == nil {
+		t.Fatal("read plan conflicts must normalize to an empty slice")
+	}
+	if _, err := manager.Apply(context.Background(), readPlan, ApplyOptions{Confirm: true}); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestLegacyAdoption(t *testing.T) {
 	home := t.TempDir()
 	target := RuntimeTarget{Runtime: RuntimeAgents, SkillsDir: filepath.Join(home, ".agents", "skills")}
