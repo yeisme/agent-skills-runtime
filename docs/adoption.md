@@ -33,8 +33,8 @@
 | --- | --- | --- | --- | --- |
 | eikona | ✅ | ✅（setup 强制；裸 `skills install` 目前解析 latest，见待办） | ✅ v0.8.1 | 自有 installer |
 | scaena | ✅ | ✅ | ⏳ 下个 release 首次携带 | 自有 adapter（待迁移共享 dist） |
-| sonora | ✅ | 🚧 sonora-agent-skills-install-v1 | ⏳ 随 change 增补 | 共享 dist（本模块） |
-| anatomia | 🚧 | 🚧 anatomia-agent-skills-install-v1 | ⏳ 随 change 增补 | 共享 dist（本模块） |
+| sonora | ✅ | ✅ sonora-agent-skills-install-v1（2026-09-18, 0c12646） | ⏳ 下个 release 首次携带（需先设 `vars.SONORA_SKILLS_SOURCE_REF`） | 共享 dist（本模块） |
+| anatomia | ✅ | ✅ anatomia-agent-skills-install-v1（2026-09-18, ba212e4；兼修复 09-06 虚假归档） | ⏳ 下个 release 首次携带（需先设 `vars.ANATOMIA_SKILLS_SOURCE_REF`） | 共享 dist（本模块） |
 
 不在此合同范围的产品（pinax、auctra、inferrum、radar、mediahub、quaestor、
 credentialctl、ordo、digital-human、gateway、gitea-mcp）走 `.skills/yeisme`
