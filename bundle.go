@@ -15,7 +15,8 @@ import (
 var skillNamePattern = regexp.MustCompile(`^[a-z0-9][a-z0-9-]*$`)
 var commitPattern = regexp.MustCompile(`^[0-9a-f]{40}$`)
 
-// Bundle is a validated local release bundle. The shared runtime never downloads it.
+// Bundle is a validated local release bundle. Downloading one from the public
+// distribution mirror is owned by ResolveDistRelease, the single shared path.
 type Bundle struct {
 	Root     string
 	Manifest BundleManifest

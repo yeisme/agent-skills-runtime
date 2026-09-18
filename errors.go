@@ -23,6 +23,8 @@ const (
 	CodeVersionMismatch       = "AGENT_SKILLS_VERSION_MISMATCH"
 	CodeLegacyOwnerDetected   = "AGENT_SKILLS_LEGACY_OWNER_DETECTED"
 	CodeTransactionIncomplete = "AGENT_SKILLS_TRANSACTION_INCOMPLETE"
+	CodeReleaseUnavailable    = "AGENT_SKILLS_RELEASE_UNAVAILABLE"
+	CodeSourceUntrusted       = "AGENT_SKILLS_SOURCE_UNTRUSTED"
 	CodeIO                    = "AGENT_SKILLS_IO"
 )
 
