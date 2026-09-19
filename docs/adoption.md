@@ -32,25 +32,30 @@
 | 产品 | 发现 | 同版本安装 | dist 资产 | 接入模块 |
 | --- | --- | --- | --- | --- |
 | eikona | ✅ | ✅（setup 强制；裸 `skills install` 目前解析 latest，见待办） | ✅ v0.8.1 | 自有 installer |
-| scaena | ✅ | ✅ | ⏳ 下个 release 首次携带 | 自有 adapter（待迁移共享 dist） |
-| sonora | ✅ | ✅ sonora-agent-skills-install-v1（2026-09-18, 0c12646） | ⏳ 下个 release 首次携带（需先设 `vars.SONORA_SKILLS_SOURCE_REF`） | 共享 dist（本模块） |
-| anatomia | ✅ | ✅ anatomia-agent-skills-install-v1（2026-09-18, ba212e4；兼修复 09-06 虚假归档） | ⏳ 下个 release 首次携带（需先设 `vars.ANATOMIA_SKILLS_SOURCE_REF`） | 共享 dist（本模块） |
+| scaena | ✅ | ✅ | ⏳ 下个 release 首次携带（`vars` 已钉 e322ce5a） | 共享 dist（2026-09-19 迁移，e26b7c5b） |
+| sonora | ✅ | ✅ sonora-agent-skills-install-v1（2026-09-18, 8a650f3；源路径修正 audio-workflow/） | ⏳ 下个 release 首次携带（`vars` 已钉 e322ce5a） | 共享 dist（本模块） |
+| anatomia | ✅ | ✅ anatomia-agent-skills-install-v1（2026-09-18, ba212e4；兼修复 09-06 虚假归档） | ⏳ 下个 release 首次携带（`vars` 已钉 e322ce5a） | 共享 dist（本模块） |
 
 不在此合同范围的产品（pinax、auctra、inferrum、radar、mediahub、quaestor、
 credentialctl、ordo、digital-human、gateway、gitea-mcp）走 `.skills/yeisme`
 仓库或 template-registry 渠道，dist 只发二进制。
 
-## 迁移待办（各产品仓库独立 change）
+## 迁移待办
 
-1. **eikona**：裸 `eikona skills install`（无 `--version`）默认解析 dist latest，
-   与同版本不变量冲突；需要 change 把默认值收敛为运行版本（保留 `--version`
-   显式覆盖），并给一个兼容窗口。
-2. **scaena**：`internal/adapters/agentskills/release.go` 迁移到
-   `ResolveDistRelease`，删除本地复制；同时下个 release 发布后实测
-   `scaena skills install --yes`。
-3. **anatomia**：2026-09-06 归档的 anatomia-agent-skills-distribution-v1 声称
-   的实现从未进入 git（tasks 引用的测试在任何分支都不存在）；新 change 必须
-   先补齐发现层再落安装层，并把这作为归档治理记录。
+1. ~~eikona 裸 install 默认 latest~~ — 已收敛：`eikona-skills-install-version-default-v1`
+   （2026-09-19，0215a629）：裸 install/plan pin 运行 released 版本，dev 构建
+   fail-closed（`SETUP_RELEASE_REQUIRED`），`--version latest` 显式保留旧行为。
+2. ~~scaena 迁移共享 dist 解析~~ — 已完成：`scaena-agent-skills-shared-dist-v1`
+   （2026-09-19，e26b7c5b）：release.go 278→75 行，下载/校验/解压全走
+   `ResolveDistRelease`；builder 首次对真实源 17/17 全绿。
+3. ~~SKILLS_SOURCE_REF 变量~~ — 已设置（2026-09-19）：sonora/scaena/anatomia 三仓
+   `vars.<PRODUCT>_SKILLS_SOURCE_REF` 均钉在 my-skills `e322ce5a`；该 commit 补发
+   了 anatomia-video-transform-operator、creative-grilling、manga-drama-grill-me，
+   并把 scaena gitlink 升到 scaena-skills `4f7a4a4`（scaena/ai-drama 等 skill
+   模块是 my-skills 的 submodule，远程 API 探不到，须 recursive 检出后核验）。
+4. **发版实测（owner 门）**：三产品下个 release 后各跑一次
+   `<product> skills install --yes`；skills 资产首次随 release 上传。
+5. **anatomia 后续归档必须附实现 commit 证据**（2026-09-06 虚假归档治理）。
 
 ## 相关资料
 
